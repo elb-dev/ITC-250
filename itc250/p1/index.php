@@ -4,7 +4,7 @@
 
 require 'functions.php';
 
-SayHi();	//Quick test of functions
+SayHi();    //Quick test of functions
 
 echo '<br/>';
 
