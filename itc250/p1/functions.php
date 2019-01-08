@@ -7,32 +7,32 @@ function sayHi()
     echo "Hello world.";
 }
 
-function fToC($temp)
+function myFToC($temp)
 {
     return ($temp-32)*(5/9);
 }
 
-function cToF($temp)
+function myCToF($temp)
 {
     return ($temp*(9/5))+32;
 }
 
-function cToK($temp)
+function myCToK($temp)
 {
     return $temp+273.15;
 }
 
-function kToC($temp)
+function myKToC($temp)
 {
     return $temp-273.15;
 }
 
-function fToK($temp)
+function myFToK($temp)
 {
     return ($temp-32)*(5/9)+273.15;
 }
 
-function kToF($temp)
+function myKToF($temp)
 {
     return ($temp-273.15)*(9/5)+32;
 }
