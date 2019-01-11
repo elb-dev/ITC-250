@@ -2,11 +2,6 @@
 
 //functions.php
 
-function sayHi()
-{
-    echo "Hello world.";
-}
-
 function myFToC($temp)
 {
     return ($temp-32)*(5/9);
