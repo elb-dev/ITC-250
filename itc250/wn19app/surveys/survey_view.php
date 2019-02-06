@@ -20,8 +20,12 @@ require '../inc_0700/config_inc.php'; #provides configuration, pathing, error ha
 if(isset($_GET['id']) && (int)$_GET['id'] > 0){#proper data must be on querystring
 	 $myID = (int)$_GET['id']; #Convert to integer, will equate to zero if fails
 }else{
-	myRedirect(VIRTUAL_PATH . "demo/demo_list.php");
+	myRedirect(VIRTUAL_PATH . "surveys/index.php");
 }
+
+$mySurvey = new Survey($myID);
+
+
 
 /*
 select q.QuestionID, q.Question from srv_questions q inner join srv_surveys s on s.SurveyID = q.SurveyID where s.SurveyID = 1
@@ -30,9 +34,9 @@ $sql = "select MuffinName,Description,MetaDescription,MetaKeywords,Price from te
 */
 
 //sql statement to select individual item
-$sql = "select q.QuestionID, q.Question from wn19_questions q inner join wn19_surveys s on s.SurveyID = q.SurveyID where s.SurveyID = " . $myID;
+//$sql = "select q.QuestionID, q.Question from wn19_questions q inner join wn19_surveys s on s.SurveyID = q.SurveyID where s.SurveyID = " . $myID;
 //---end config area --------------------------------------------------
-
+/*
 $foundRecord = FALSE; # Will change to true, if record found!
    
 # connection comes first in mysqli (improved) function
@@ -49,7 +53,7 @@ if(mysqli_num_rows($result) > 0)
 }
 
 @mysqli_free_result($result); # We're done with the data!
-
+*/
 /*
 $config->metaDescription = 'Web Database ITC281 class website.'; #Fills <meta> tags.
 $config->metaKeywords = 'SCCC,Seattle Central,ITC281,database,mysql,php';
@@ -69,16 +73,50 @@ get_header(); #defaults to theme header or header_inc.php
 <h3 align="center"><?=smartTitle();?></h3>
 
 <?php
-if($foundRecord)
+if($mySurvey->IsValid)
 {#records exist - show muffin!
-echo "
-<h1>Question</h1>
-<p>$Question</p>
-";
+echo '
+<h3>' . $mySurvey->Title . '</h3>
+<p>' . $mySurvey->Description . '</p>
+';
 }else{//no such muffin!
     echo '<div align="center">What! No such muffin? There must be a mistake!!</div>';
-    echo '<div align="center"><a href="' . VIRTUAL_PATH . 'demo/demo_list.php">Another Muffin?</a></div>';
+    echo '<div align="center"><a href="' . VIRTUAL_PATH . 'surveys/index.php">BACK</a></div>';
 }
 
 get_footer(); #defaults to theme footer or footer_inc.php
-?>
+
+class Survey
+{
+	public $SurveyID = 0;
+	public $Title = '';
+	public $Description = '';
+	public $IsValid = false;
+	public $Questions = array();
+
+	public function __construct($SurveyID)
+	{
+		//Filter out bad data with a cast
+		$this->SurveyID = (int)$SurveyID;
+
+		//SQL statement to select individual item
+		//$sql = "select q.QuestionID, q.Question from wn19_questions q inner join wn19_surveys s on s.SurveyID = q.SurveyID where s.SurveyID = " . $myID;
+
+		$sql = "SELECT Title, Description FROM wn19_surveys WHERE SurveyID=$this->SurveyID";
+
+		$result = mysqli_query(IDB::conn(),$sql) or die(trigger_error(mysqli_error(IDB::conn()), E_USER_ERROR));
+
+		if(mysqli_num_rows($result) > 0)
+		{#records exist - process
+			   $this->IsValid = true;
+			   $foundRecord = TRUE;	
+			   while ($row = mysqli_fetch_assoc($result))
+			   {
+					$this->Title = dbOut($row['Title']);
+					$this->Description = dbOut($row['Description']);
+			   }
+		}
+
+		@mysqli_free_result($result); # We're done with the data!
+	}	//End of survey constructor
+}//End survey class.
