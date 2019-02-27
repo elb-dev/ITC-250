@@ -110,7 +110,7 @@ class MY_Survey extends Survey
         }else{#no records
             echo "<div align=center>We have no surveys.</div>";	
         }
-        @mysqli_free_result($result);*/
+        @mysqli_free_result($result);
 	}#stub of convenience method to produce a list of responses
 	
 	/**
