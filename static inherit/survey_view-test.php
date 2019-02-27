@@ -34,10 +34,6 @@ if($mySurvey->isValid)
 }else{
 	$config->titleTag = smartTitle(); //use constant 
 }
-
-//adds font awesome icons for arrows on pager
-$config->loadhead .= '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">';
-
 #END CONFIG AREA ---------------------------------------------------------- 
 
 get_header(); #defaults to theme header or header_inc.php

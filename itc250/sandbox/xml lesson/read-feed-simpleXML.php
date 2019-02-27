@@ -2,7 +2,7 @@
 //read-feed-simpleXML.php
 //our simplest example of consuming an RSS feed
 
-  $request = "http://rss.news.yahoo.com/rss/software";
+  $request = "https://news.google.com/rss/search?q=strawberry+shortcake&hl=en-US&gl=US&ceid=US:en";
   $response = file_get_contents($request);
   $xml = simplexml_load_string($response);
   print '<h1>' . $xml->channel->title . '</h1>';
