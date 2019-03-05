@@ -51,7 +51,7 @@
  * A static method could be accessed in this manner:
  *
  *<code>
- * echo $mySurvey::responseList($myID);
+ * $myReturn .= $mySurvey::responseList($myID);
  *</code>
  *
  * @see Survey
@@ -66,7 +66,55 @@ class MY_Survey extends Survey
 	}//end constructor
 	
 	public static function responseList($id)
-	{/*
+	{
+        $myReturn = '';
+        $id = (int)$id; //cast to integer
+        $sql = "SELECT DateAdded, ResponseID from wn19_responses where ResponseID = $id";
+        //return $id;
+        #images in this case are from font awesome
+        $prev = '<i class="fa fa-chevron-circle-left"></i>';
+        $next = '<i class="fa fa-chevron-circle-right"></i>';
+
+        # Create instance of new 'pager' class
+        $myPager = new \Pager(10,'',$prev,$next,'');
+        $sql = $myPager->loadSQL($sql);  #load SQL, add offset
+
+        # connection comes first in mysqli (improved) function
+        $result = mysqli_query(\IDB::conn(),$sql) or die(trigger_error(mysqli_error(\IDB::conn()), E_USER_ERROR));
+
+        if(mysqli_num_rows($result) > 0)
+        {#records exist - process
+            if($myPager->showTotal()==1){$itemz = "response";}else{$itemz = "responses";}  //deal with plural
+            $myReturn .= '<div align="center">We have ' . $myPager->showTotal() . ' ' . $itemz . '!</div>';
+
+            $myReturn .= '<table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Date Taken</th>
+            </tr>
+          </thead>
+          <tbody>';
+
+            while($row = mysqli_fetch_assoc($result))
+            {# process each row
+                 //$myReturn .= '<div align="center"><a href="' . VIRTUAL_PATH . 'surveys/survey_view.php?id=' . (int)$row['SurveyID'] . '">' . dbOut($row['Title']) . '</a></div>';
+                $myReturn .= '   <tr>
+                          <td>' . '<a href="' . VIRTUAL_PATH . 'surveys/response_view.php?id=' . (int)$row['ResponseID'] . '">' . dbOut($row['DateAdded']) . '</a>' . '</td>
+                        </tr>';
+            }
+        $myReturn .= '  </tbody>
+        </table>';
+            $myReturn .= $myPager->showNAV(); # show paging nav, only if enough records	 
+        }else{#no records
+            $myReturn .= "<div align=center>There are currently no responses.</div>";	
+        }
+        @mysqli_free_result($result);
+        return $myReturn;
+	}#stub of convenience method to produce a list of responses
+        
+    
+    
+        /*
         $sql = "PUT SQL HERE";
         //return $id;
         #images in this case are from font awesome
@@ -83,7 +131,7 @@ class MY_Survey extends Survey
         if(mysqli_num_rows($result) > 0)
         {#records exist - process
             if($myPager->showTotal()==1){$itemz = "survey";}else{$itemz = "surveys";}  //deal with plural
-            echo '<div align="center">We have ' . $myPager->showTotal() . ' ' . $itemz . '!</div>';
+            $myReturn .= '<div align="center">We have ' . $myPager->showTotal() . ' ' . $itemz . '!</div>';
 
             echo'<table class="table table-hover">
           <thead>
@@ -97,7 +145,7 @@ class MY_Survey extends Survey
 
             while($row = mysqli_fetch_assoc($result))
             {# process each row
-                 //echo '<div align="center"><a href="' . VIRTUAL_PATH . 'surveys/survey_view.php?id=' . (int)$row['SurveyID'] . '">' . dbOut($row['Title']) . '</a></div>';
+                 //$myReturn .= '<div align="center"><a href="' . VIRTUAL_PATH . 'surveys/survey_view.php?id=' . (int)$row['SurveyID'] . '">' . dbOut($row['Title']) . '</a></div>';
                 echo'   <tr>
                           <td>' . '<a href="' . VIRTUAL_PATH . 'surveys/survey_view.php?id=' . (int)$row['SurveyID'] . '">' . dbOut($row['Title']) . '</a>' . '</td>
                           <td>' . dbOut($row['AdminName']) . '</td>
@@ -106,9 +154,9 @@ class MY_Survey extends Survey
             }
         echo'  </tbody>
         </table>';
-            echo $myPager->showNAV(); # show paging nav, only if enough records	 
+            $myReturn .= $myPager->showNAV(); # show paging nav, only if enough records	 
         }else{#no records
-            echo "<div align=center>We have no surveys.</div>";	
+            $myReturn .= "<div align=center>We have no surveys.</div>";	
         }
         @mysqli_free_result($result);
 	}#stub of convenience method to produce a list of responses
@@ -140,9 +188,9 @@ class MY_Survey extends Survey
 				</div>
 				';
 				/*
-				echo $question->QuestionID . " ";
-				echo $question->Text . " ";
-				echo $question->Description . "<br />";
+				$myReturn .= $question->QuestionID . " ";
+				$myReturn .= $question->Text . " ";
+				$myReturn .= $question->Description . "<br />";
 				#call showAnswers() method to display array of Answer objects
 				$question->showAnswers() . "<br />";
 				*/
