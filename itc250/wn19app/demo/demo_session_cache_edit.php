@@ -141,7 +141,8 @@ function duckForm()
 		</table>
 	';
 	if(isset($_SESSION['Time'])){
-		echo'Time until next destroy: '.(($_SESSION['Time']+60)-time());	
+		echo'Time until next destroy: '.(($_SESSION['Time']+60)-time());
+        }
 	}
 	
 	get_footer(); #defaults to footer_inc.php
