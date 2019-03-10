@@ -8,6 +8,7 @@ $myPeople[] = new Person("Rominov","Natasha",31);
 
 foreach($myPeople as $myPerson){
     echo "<p>My name is $myPerson->FirstName $myPerson->LastName and I'm $myPerson->Age years old.</p>";
+    
 }
 
 /*

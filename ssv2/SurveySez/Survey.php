@@ -1,9 +1,4 @@
 <?php
-<<<<<<< HEAD
-//Survey.php
-namespace SurveySez;
-
-=======
 /**
  * Survey.php provides the main access class for SurveySez project
  * 
@@ -44,7 +39,6 @@ namespace SurveySez;
  
  namespace SurveySez;
  
->>>>>>> 0aea4fa598d4bbc27b76b05d0d4b3cbb78a17705
 /**
  * Survey Class retrieves data info for an individual Survey
  * 
@@ -57,21 +51,11 @@ namespace SurveySez;
  * A survey object (an instance of the Survey class) can be created in this manner:
  *
  *<code>
-<<<<<<< HEAD
- *$mySurvey = new SurveySez\Survey(1);
-=======
  *$mySurvey = new Survey(1);
->>>>>>> 0aea4fa598d4bbc27b76b05d0d4b3cbb78a17705
  *</code>
  *
  * In which one is the number of a valid Survey in the database. 
  *
-<<<<<<< HEAD
- * The forward slash in front of IDB picks up the global namespace, which is required 
- * now that we're here inside the SurveySez namespace: \IDB::conn()
- *
-=======
->>>>>>> 0aea4fa598d4bbc27b76b05d0d4b3cbb78a17705
  * The showQuestions() method of the Survey object created will access an array of question 
  * objects and internally access a method of the Question class named showAnswers() which will 
  * access an array of Answer objects to produce the visible data.
@@ -88,10 +72,7 @@ class Survey
 	 public $Description = "";
 	 public $isValid = FALSE;
 	 public $TotalQuestions = 0; #stores number of questions
-<<<<<<< HEAD
-=======
 	 #v2: Array of questions changed from private to protected to accommodate Response() object
->>>>>>> 0aea4fa598d4bbc27b76b05d0d4b3cbb78a17705
 	 protected $aQuestion = Array();#stores an array of question objects
 	
 	/**
@@ -105,20 +86,13 @@ class Survey
 	{#constructor sets stage by adding data to an instance of the object
 		$this->SurveyID = (int)$id;
 		if($this->SurveyID == 0){return FALSE;}
-<<<<<<< HEAD
-=======
 		$iConn = \IDB::conn(); #uses a singleton DB class to create a mysqli improved connection 
->>>>>>> 0aea4fa598d4bbc27b76b05d0d4b3cbb78a17705
 		
 		#get Survey data from DB
 		$sql = sprintf("select Title, Description from " . PREFIX . "surveys Where SurveyID =%d",$this->SurveyID);
 		
 		#in mysqli, connection and query are reversed!  connection comes first
-<<<<<<< HEAD
-		$result = mysqli_query(\IDB::conn(),$sql) or die(trigger_error(mysqli_error(\IDB::conn()), E_USER_ERROR));
-=======
 		$result = mysqli_query($iConn,$sql) or die(trigger_error(mysqli_error($iConn), E_USER_ERROR));
->>>>>>> 0aea4fa598d4bbc27b76b05d0d4b3cbb78a17705
 		if (mysqli_num_rows($result) > 0)
 		{#Must be a valid survey!
 			$this->isValid = TRUE;
@@ -129,37 +103,21 @@ class Survey
 			}
 		}
 		@mysqli_free_result($result); #free resources
-<<<<<<< HEAD
-		
-=======
->>>>>>> 0aea4fa598d4bbc27b76b05d0d4b3cbb78a17705
 		if(!$this->isValid){return;}  #exit, as Survey is not valid
 		
 		#attempt to create question objects
 		$sql = sprintf("select QuestionID, Question, Description from " . PREFIX . "questions where SurveyID =%d",$this->SurveyID);
-<<<<<<< HEAD
-		$result = mysqli_query(\IDB::conn(),$sql) or die(trigger_error(mysqli_error(\IDB::conn()), E_USER_ERROR));
-=======
 		$result = mysqli_query($iConn,$sql) or die(trigger_error(mysqli_error($iConn), E_USER_ERROR));
->>>>>>> 0aea4fa598d4bbc27b76b05d0d4b3cbb78a17705
 		if (mysqli_num_rows($result) > 0)
 		{#show results
 		   while ($row = mysqli_fetch_assoc($result))
 		   {
-<<<<<<< HEAD
-				#create question, and push onto stack!
-				$this->aQuestion[] = new Question(dbOut($row['QuestionID']),dbOut($row['Question']),dbOut($row['Description'])); 
-		   }
-		}
-		$this->TotalQuestions = count($this->aQuestion); //the count of the aQuestion array is the total number of questions
-=======
 				$this->TotalQuestions += 1; #increment total number of questions
 				#Current TotalQuestions added to Question object as Number property - added in v2
 				$this->aQuestion[] = new Question(dbOut($row['QuestionID']),dbOut($row['Question']),dbOut($row['Description']),$this->TotalQuestions);
 		   }
 		}
 		$this->TotalQuestions = count($this->aQuestion); #TotalQuestions derived above - consider deleting this line!  v2 
->>>>>>> 0aea4fa598d4bbc27b76b05d0d4b3cbb78a17705
 		@mysqli_free_result($result); #free resources
 		
 		#attempt to load all Answer objects into cooresponding Question objects 
@@ -169,11 +127,7 @@ class Survey
 		where s.SurveyID = %d   
 		order by a.AnswerID asc";
 		$sql = sprintf($sql,$this->SurveyID); #process SQL
-<<<<<<< HEAD
-		$result = mysqli_query(\IDB::conn(),$sql) or die(trigger_error(mysqli_error(\IDB::conn()), E_USER_ERROR));
-=======
 		$result = mysqli_query($iConn,$sql) or die(trigger_error(mysqli_error($iConn), E_USER_ERROR));
->>>>>>> 0aea4fa598d4bbc27b76b05d0d4b3cbb78a17705
 		if (mysqli_num_rows($result) > 0)
 		{#at least one answer!
 		   while ($row = mysqli_fetch_assoc($result))
@@ -203,41 +157,10 @@ class Survey
 	function showQuestions()
 	{
 		$myReturn = '';
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 0aea4fa598d4bbc27b76b05d0d4b3cbb78a17705
 		if($this->TotalQuestions > 0)
 		{#be certain there are questions
 			foreach($this->aQuestion as $question)
 			{#print data for each 
-<<<<<<< HEAD
-				$myReturn .= '
-				<div class="panel panel-default">
-				    <div class="panel-heading">
-				        <h3 class="panel-title">'.$question->Text.'</h3>
-				    </div>
-				    <div class="panel-body">
-				        '.$question->showAnswers().'<br />
-				    </div>
-				</div>
-				';
-				/*
-				echo $question->QuestionID . " ";
-				echo $question->Text . " ";
-				echo $question->Description . "<br />";
-				#call showAnswers() method to display array of Answer objects
-				$question->showAnswers() . "<br />";
-				*/
-			}
-		}else{
-			$myReturn = "There are currently no questions for this survey.";	
-		}
-	return $myReturn;
-	}# end showQuestions() method
-}# end Survey class
-=======
 				$myReturn .= $question->Number . ') '; # We're using new Number property instead of id - v2
 				$myReturn .= $question->Text . ' ';
 				if($question->Description != ''){$myReturn .= '<em>(' . $question->Description . ')</em>';}
@@ -251,4 +174,3 @@ class Survey
 		return $myReturn;
 	}# end showQuestions() method
 }# end Survey class
->>>>>>> 0aea4fa598d4bbc27b76b05d0d4b3cbb78a17705

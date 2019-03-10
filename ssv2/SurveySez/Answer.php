@@ -1,9 +1,4 @@
 <?php
-<<<<<<< HEAD
-//Answer.php
-namespace SurveySez;
-
-=======
 /**
  * Answer.php provides a way to store answers to questions to Surveys for the SurveySez 
  * project
@@ -43,16 +38,12 @@ namespace SurveySez;
  * @todo none
  */
  
->>>>>>> 0aea4fa598d4bbc27b76b05d0d4b3cbb78a17705
 class Answer
 {
 	 public $AnswerID = 0;
 	 public $Text = "";
 	 public $Description = "";
-<<<<<<< HEAD
-=======
 	
->>>>>>> 0aea4fa598d4bbc27b76b05d0d4b3cbb78a17705
 	/**
 	 * Constructor for Answer class. 
 	 *
@@ -68,8 +59,4 @@ class Answer
 		$this->Text = $answer;
 		$this->Description = $description;
 	}#end Answer() constructor
-<<<<<<< HEAD
 }#end Answer class
-=======
-}#end Answer class
->>>>>>> 0aea4fa598d4bbc27b76b05d0d4b3cbb78a17705

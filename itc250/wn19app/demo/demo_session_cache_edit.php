@@ -57,12 +57,20 @@ $config->nav1 = array("page.php"=>"New Page!") + $config->nav1; #add a new page 
 //END CONFIG AREA ----------------------------------------------------------
 
 # Read the value of 'action' whether it is passed via $_POST or $_GET with $_REQUEST
-if(isset($_REQUEST['act'])){$myAction = (trim($_REQUEST['act']));}else{$myAction = "";}
+if(isset($_REQUEST['act'])){
+	$myAction = (trim($_REQUEST['act']));
+}else{
+	$myAction = "";
+}
 
 switch ($myAction) 
 {//check 'act' for type of process
 	case "display": # 2)Display user's name!
 	 	showDucks();
+	 	break;
+	 case "reset":
+	 	session_destroy();
+	 	duckForm();
 	 	break;
 	default: # 1)Ask user to enter their name 
 	 	duckForm();
@@ -118,12 +126,25 @@ function duckForm()
 			<tr>
 				<td align="center" colspan="2">
 					<input type="submit" value="Please Enter Your Name"><em>(<font color="red"><b>*</b> required field</font>)</em>
+					<input type="hidden" name="act" value="display" />
+				</td>
+			</tr>
+			</form>
+			<tr>
+				<td align="center" colspan="2">
+					<form action="' . THIS_PAGE . '" method="post" onsubmit="return checkForm(this);">
+					<input type="submit" value="Reset">
+					<input type="hidden" name="act" value="reset" />
+					</form>
 				</td>
 			</tr>
 		</table>
-		<input type="hidden" name="act" value="display" />
-	</form>
 	';
+	if(isset($_SESSION['Time'])){
+		echo'Time until next destroy: '.(($_SESSION['Time']+60)-time());
+        }
+	}
+	
 	get_footer(); #defaults to footer_inc.php
 }
 
@@ -134,29 +155,28 @@ function showDucks()
     
     //dumpDie($_POST);
     startSession();
-    
-<<<<<<< HEAD
-=======
+
     /*
-    If no feed yet, create feed array.
-    If feed exists, check to see if the current feed is stored.
-    If the feed is stored, check the time to see if it's current within ten minutes.
+    If no feeds yet, create feed array.
+    If feeds exist, check to see if the current feed is stored.
+    If the feed is stored, check the time to see if it's current.
     If the time is current on the feed, use the cache.
     If the time is out of date, get new data, refresh the cache.
-    If no feed, createfeed in cache, use website data.
-    
+    If no feed, create feed in cache, use website data.
     */
     
->>>>>>> 0aea4fa598d4bbc27b76b05d0d4b3cbb78a17705
     if(!isset($_SESSION['Ducks'])){
-       $_SESSION['Ducks'] = array(); 
+       $_SESSION['Ducks'] = array();
+       $_SESSION['Time'] = time();
     }
     
      $_SESSION['Ducks'][] = new Duck($_POST['Name'],$_POST['Hobby'],$_POST['Allowance']);
     
-    dumpDie($_SESSION['Ducks']);
+    echo'<p>';
+    var_dump($_SESSION['Ducks']);
+    echo'</p>';
 
-    
+	/*
 	if(!isset($_POST['YourName']) || $_POST['YourName'] == '')
 	{//data must be sent	
 		feedback("No form data submitted"); #will feedback to submitting page via session variable
@@ -174,6 +194,9 @@ function showDucks()
 	echo '<h3 align="center">' . smartTitle() . '</h3>';
 	echo '<p align="center">Your name is <b>' . $myName . '</b>!</p>';
 	echo '<p align="center"><a href="' . THIS_PAGE . '">RESET</a></p>';
+	*/
+	//session_unset();
+	//session_destroy();
 	get_footer(); #defaults to footer_inc.php
 }
 
@@ -201,53 +224,3 @@ class Duck{
     }//end toString()
 
 }//end Duck class
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
